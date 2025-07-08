@@ -12,6 +12,6 @@ const SWAGGER_BASE_URL = getEnvironmentVariable('SWAGGER_BASE_URL');
 (() => {
   server.listen(PORT, () => {
     logger.info(`Server is running on PORT: ${PORT}`);
-    console.log(`📘 Swagger Docs at ${SWAGGER_BASE_URL}`);
+    console.log(`📘 Swagger Docs at ${SWAGGER_BASE_URL}/api-docs`);
   });
 })();
