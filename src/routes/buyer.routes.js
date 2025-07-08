@@ -65,7 +65,7 @@ const router = Router();
 
 /**
  * @swagger
- * /buyers/signup:
+ * api/v1/buyers/signup:
  *   post:
  *     summary: Register a new buyer
  *     description: Register a new buyer with the required details.

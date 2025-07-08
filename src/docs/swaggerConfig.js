@@ -1,5 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import { getEnvironmentVariable } from '../config/dotenvConfig.js';
 
 // Initialize Swagger documentation
 const options = {
@@ -12,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000/api/v1',
+        url: getEnvironmentVariable('SWAGGER_BASE_URL'),
       },
     ],
   },
