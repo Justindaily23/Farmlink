@@ -25,6 +25,11 @@ app.get('/', (req, res) => {
   res.send('Welcome to FarmLink Api');
 });
 
+// Health check
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // routes
 app.use('/api/v1', router);
 
