@@ -7,10 +7,11 @@ connectToDb();
 
 // Get Port from env to start the server
 const PORT = getEnvironmentVariable('PORT');
+const SWAGGER_BASE_URL = getEnvironmentVariable('SWAGGER_BASE_URL');
 
 (() => {
   server.listen(PORT, () => {
     logger.info(`Server is running on PORT: ${PORT}`);
-    console.log(`📘 Swagger Docs at http://localhost:${PORT}/api-docs`);
+    console.log(`📘 Swagger Docs at ${SWAGGER_BASE_URL}`);
   });
 })();
