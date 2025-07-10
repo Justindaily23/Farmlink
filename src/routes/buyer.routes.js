@@ -208,7 +208,7 @@ router.post(
  *     summary: Reset Password
  *     description: Reset Password
  *     tags:
- *       - Password
+ *       - Buyers
  *     reuestBody:
  *       required: true
  *       content:
