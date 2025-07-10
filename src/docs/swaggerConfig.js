@@ -16,21 +16,22 @@ const options = {
         url: getEnvironmentVariable('SWAGGER_BASE_URL'),
       },
     ],
-  },
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
       },
     },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
+
   apis: ['./src/routes/**/*.js'], // Path to the API docs
 };
 
