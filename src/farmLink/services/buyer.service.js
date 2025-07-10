@@ -71,31 +71,54 @@ export const loginBuyer = async ({ email, password }) => {
 };
 
 export const requestBuyerPasswordReset = async (email) => {
-  const user = await Buyer.findOne({ where: { email } });
-  if (!user) throw new UnauthorizedException('No user with that email');
+  try {
+    // 1. Check user
+    const user = await Buyer.findOne({ where: { email } });
+    if (!user) throw new UnauthorizedException('No user with that email');
 
-  const token = crypto.randomBytes(32).toString('hex');
-  const expires = new Date(Date.now() + 3600000); // 1 hour
+    // 2. Generate token + expiry
+    const token = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const expires = new Date(Date.now() + 3600000); // 1 hour
 
-  await user.update({
-    reset_password_token: token,
-    reset_password_expires: expires,
-  });
+    // 3. Update DB
+    await user.update({
+      reset_password_token: hashedToken,
+      reset_password_expires: expires,
+    });
 
-  const resetLink = `${getEnvironmentVariable('APP_BASE_URL')}/api/v1/buyers/reset-password?token=${token}`;
-  await sendEmail(
-    user.email,
-    'Reset your password',
-    `Click here to reset: ${resetLink}`
-  );
+    // 4. Construct email
+    const resetLink = `${getEnvironmentVariable('FRONTEND_URL')}/reset-password?token=${token}`;
+    const plainTextFallback = `Click this link to reset your password: ${resetLink}`;
+    const htmlContent = `
+      <p>Hello ${user.first_name || 'User'},</p>
+      <p>You requested a password reset.</p>
+      <p>Click <a href="${resetLink}" target="_blank" rel="noopener noreferrer">here</a> to reset your password.</p>
+      <p>This link will expire in 1 hour.</p>
+      <p>If you didn’t request this, you can safely ignore it.</p>
+    `;
 
-  return { message: 'Reset link sent to your email' };
+    // 5. Send Email
+    await sendEmail(
+      user.email,
+      'Reset Your Password',
+      htmlContent,
+      plainTextFallback
+    );
+
+    // 6. Done
+    return { message: 'Reset link sent to your email' };
+  } catch (err) {
+    console.error('Password reset error:', err.message);
+    throw new Error('Failed to initiate password reset. Please try again.');
+  }
 };
 
 export const resetBuyerPasswordService = async (token, newPassword) => {
+  const hashedtoken = crypto.createHash('sha256').update(token).digest('hex');
   const buyer = await Buyer.findOne({
     where: {
-      reset_password_token: token,
+      reset_password_token: hashedtoken,
       reset_password_expires: { [Op.gt]: new Date() }, // Ensure token is still valid
     },
   });
@@ -113,6 +136,4 @@ export const resetBuyerPasswordService = async (token, newPassword) => {
   buyer.reset_password_token = null;
   buyer.reset_password_expires = null;
   await buyer.save();
-
-  return { message: 'Password has been reset successfully' };
 };

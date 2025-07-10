@@ -60,8 +60,11 @@ export const loginBuyerController = asyncHandler(async (req, res) => {
 
 export const forgotBuyerPasswordController = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const result = await requestBuyerPasswordReset(email);
-  res.status(200).json(result);
+  await requestBuyerPasswordReset(email);
+  res.status(200).json({
+    success: true,
+    message: 'Reset link sent to Email',
+  });
 });
 
 export const resetBuyerPasswordController = asyncHandler(async (req, res) => {
@@ -77,6 +80,9 @@ export const resetBuyerPasswordController = asyncHandler(async (req, res) => {
   if (password !== confirm_password) {
     return res.status(400).json({ message: 'Passwords do not match' });
   }
-  const result = await resetBuyerPasswordService(token, password);
-  res.status(200).json(result);
+  await resetBuyerPasswordService(token, password);
+  res.status(200).json({
+    sucess: true,
+    message: 'Password reset successful',
+  });
 });

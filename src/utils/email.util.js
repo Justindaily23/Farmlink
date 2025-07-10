@@ -1,20 +1,26 @@
 import nodemailer from 'nodemailer';
 import { getEnvironmentVariable } from '../config/dotenvConfig.js'; // if you use env vars
 
-export const sendEmail = async (to, subject, text) => {
+// Setting Email utility using nodemailer
+export const sendEmail = async (
+  to,
+  subject,
+  htmlContent,
+  plainTextFallback = ''
+) => {
   const transporter = nodemailer.createTransport({
-    host: 'smtp.mailtrap.io',
-    port: 2525, // or 587
+    service: 'gmail',
     auth: {
-      user: getEnvironmentVariable('MAILTRAP_USER'), // set in your .env file
-      pass: getEnvironmentVariable('MAILTRAP_PASS'), // set in your .env file
+      user: getEnvironmentVariable('MAIL_USER'),
+      pass: getEnvironmentVariable('MAIL_PASS'),
     },
   });
 
   await transporter.sendMail({
-    from: `"FarmLink Dev" <no-reply@farmlink.dev>`, // your "from" address
+    from: `"FarmLink Support" <${getEnvironmentVariable('MAIL_USER')}>`,
     to,
     subject,
-    text,
+    html: htmlContent,
+    text: plainTextFallback,
   });
 };

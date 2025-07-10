@@ -80,6 +80,12 @@ const router = Router();
  *     responses:
  *       '201':
  *         description: Buyer registered successfully
+ *       '400':
+ *         description: Bad request — missing or invalid fields
+ *       '409':
+ *         description: Email already exists
+ *       '500':
+ *         description: Server error
  */
 router.post(
   '/signup',
@@ -87,21 +93,141 @@ router.post(
   registerBuyerController
 );
 
-// Login a buyer
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginBuyer:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "justin@example.com"
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "strongPassword123"
+ */
+
+/**
+ * @swagger
+ * /api/v1/buyers/login:
+ *   post:
+ *     summary: Logs in a buyer
+ *     description: Log in as a registered buyer with required registered details
+ *     tags:
+ *       - Buyers
+ *     reuestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginBuyer'
+ *     responses:
+ *       '200':
+ *         description: Login successful! Welcome {user}
+ *       '400':
+ *         description: Bad request — invalid email or password
+ *       '500':
+ *         description: Server error
+ */
 router.post('/login', validateRequest(loginBuyerSchema), loginBuyerController);
 
-export default router;
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ForgotPassword:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "justin@example.com"
+ */
 
-// reset password for user
+/**
+ * @swagger
+ * /api/v1/buyers/forgot-password:
+ *   post:
+ *     summary: Forgot password
+ *     description: Forgot password
+ *     tags:
+ *       - Buyers
+ *     reuestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ForgotPassword'
+ *     responses:
+ *       '200':
+ *         description: Reset link sent to your email
+ *       '400':
+ *         description: Bad request — invalid email
+ *       '500':
+ *         description: Invalid or expired token
+ */
 router.post(
   '/forgot-password',
   authMiddleware,
   validateRequest(requestBuyerPasswordResetSchema),
   forgotBuyerPasswordController
 );
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ResetPassword:
+ *       type: object
+ *       required:
+ *         - password
+ *         - confirm_password
+ *       properties:
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "strongPassword1234"
+ *         confirm_password:
+ *           type: string
+ *           format: password
+ *           example: "strongPassword1234"
+ */
+
+/**
+ * @swagger
+ * /api/v1/buyers/reset-password:
+ *   post:
+ *     summary: Reset Password
+ *     description: Reset Password
+ *     tags:
+ *       - Password
+ *     reuestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ResetPassword'
+ *     responses:
+ *       '200':
+ *         description: Password reset successful
+ *       '400':
+ *         description: Bad request — password does not match
+ *       '500':
+ *         description: Invalid or expired token
+ */
 router.post(
   '/reset-password',
   authMiddleware,
   validateRequest(resetBuyerPasswordSchema),
   resetBuyerPasswordController
 );
+
+export default router;
