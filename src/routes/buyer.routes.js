@@ -121,7 +121,7 @@ router.post(
  *     description: Log in as a registered buyer with required registered details
  *     tags:
  *       - Buyers
- *     reuestBody:
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
@@ -160,7 +160,7 @@ router.post('/login', validateRequest(loginBuyerSchema), loginBuyerController);
  *     description: Forgot password
  *     tags:
  *       - Buyers
- *     reuestBody:
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
@@ -209,7 +209,7 @@ router.post(
  *     description: Reset Password
  *     tags:
  *       - Buyers
- *     reuestBody:
+ *     requestBody:
  *       required: true
  *       content:
  *         application/json:
