@@ -160,6 +160,8 @@ router.post('/login', validateRequest(loginBuyerSchema), loginBuyerController);
  *     description: Forgot password
  *     tags:
  *       - Buyers
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -209,6 +211,8 @@ router.post(
  *     description: Reset Password
  *     tags:
  *       - Buyers
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
