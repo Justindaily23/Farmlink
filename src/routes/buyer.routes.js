@@ -193,6 +193,10 @@ router.post(
  *         - password
  *         - confirm_password
  *       properties:
+ *         token:
+ *           type: string
+ *           format: token
+ *           example: ded28c7a4057746b930b9b41307b36b1bfd1ade1430b857e61183496b70465c8
  *         password:
  *           type: string
  *           format: password
