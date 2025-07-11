@@ -1,6 +1,6 @@
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { BadRequestException } from '../../lib/error-definitions.js';
-import { registerFarmerSchema } from '../requests/famer.request.js';
+import { registerFarmerSchema } from '../requests/farmer.request.js';
 import { loginFarmer, registerFarmer } from '../services/farmer.service.js';
 import {
   requestFarmerPasswordReset,
@@ -35,8 +35,11 @@ export const loginFarmerController = asyncHandler(async (req, res) => {
 
 export const forgotFarmerPasswordController = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const result = await requestFarmerPasswordReset(email);
-  res.status(200).json(result);
+  await requestFarmerPasswordReset(email);
+  res.status(200).json({
+    success: true,
+    message: 'Reset link sent to your email',
+  });
 });
 
 export const resetFarmerPasswordController = asyncHandler(async (req, res) => {
@@ -52,6 +55,9 @@ export const resetFarmerPasswordController = asyncHandler(async (req, res) => {
   if (password !== confirm_password) {
     return res.status(400).json({ message: 'Passwords do not match' });
   }
-  const result = await resetFarmerPasswordService(token, password);
-  res.status(200).json(result);
+  await resetFarmerPasswordService(token, password);
+  res.status(200).json({
+    success: true,
+    message: 'Password has been reset successfully',
+  });
 });
