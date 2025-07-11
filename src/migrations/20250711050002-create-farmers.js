@@ -83,5 +83,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
+    await queryInterface.dropTable('farmers');
   },
 };
