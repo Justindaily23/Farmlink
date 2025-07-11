@@ -35,7 +35,7 @@ Farmer.init(
       allowNull: false,
     },
 
-    farm_produce: {
+    primary_produce: {
       type: DataTypes.ARRAY(DataTypes.STRING), // Array of strings
       allowNull: true, // Optional during registration
     },
